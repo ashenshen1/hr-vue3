@@ -13,3 +13,13 @@ declare module '*.vue' {
 declare module '*.scss' { }
 declare module '*.css' { }
 declare module '*.less' { }
+
+
+// 基础地址类型
+interface ImportMetaEnv {
+    readonly VITE_APP_BASE_API: string
+}
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv
+}

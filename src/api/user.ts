@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import service from '../utils/request'
 
 // 登录参数类型
 export interface loginForm {
@@ -7,12 +7,9 @@ export interface loginForm {
     isAgree: boolean
 }
 
-// 登录接口
-export async function login(data: loginForm): Promise<string> {
-    const res = await request<{ token: string }>({
-        url: '/sys/login', // 乱写的
-        method: 'post',
-        data
-    })
-    return res.token
+// api/user.ts
+export async function fetchLoginToken(data: loginForm): Promise<string> {
+    // post请求 并且告诉typescript 响应脱壳后一定是 {token:string}形状
+    const { token } = await service.post<{ token: string }>('/sys/login', data)  // 这里后端接口乱写的 data是请求体
+    return token
 }

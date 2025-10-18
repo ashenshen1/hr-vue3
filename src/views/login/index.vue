@@ -1,3 +1,4 @@
+
 <template>
     <div class="login-container">
         <div class="logo" />
@@ -30,18 +31,23 @@
 <script setup lang="ts">
 // 导入函数
 import { reactive, ref } from 'vue';
-
+// import { useRouter } from 'vue-router';
+import { useUserStore } from '../../store/modules/user'
 // 导入类型声明
 import type { FormInstance } from 'element-plus';
 
 
 // 响应式数据
 const form = ref<FormInstance>() // 声明一个响应式引用 以便后续调用表单方法 比如.validate()/.resetFields()
+const isDev = import.meta.env.DEV
 const loginForm = reactive({
-    mobile: '',
-    password: '',
-    isAgree: false
+    mobile: isDev ? '13800000002' : '',
+    password: isDev ? '123456' : '',
+    isAgree: isDev
 })
+
+const userStore = useUserStore()
+// const router = useRouter()
 
 // 校验规则
 const loginRules = reactive({
@@ -62,11 +68,11 @@ const loginRules = reactive({
 })
 // 登录
 const login = async () => {
-    try {
-        await form.value?.validate()
-        // 调用pinia的login
-        console.log('提交数据', { ...form })
-    } catch { }
+    const passed = form.value?.validate();
+    if (passed) {
+        await userStore.loginAction(loginForm) // 调用store里的普通方法 此方法用于调用api获取token 并且修改state中的数据
+    }
+
 }
 </script>
 
